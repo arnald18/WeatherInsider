@@ -31,6 +31,7 @@ $(function () {
         getForecast(data[0]);
       });
   }
+
   // with the latitude and longitude we'll use the weather api to get the forecast
 
   function getForecast(data) {
@@ -63,31 +64,36 @@ $(function () {
   // display the forecast on the screen and add the city to the cities list
 
   function displayForecast(data) {
+    $("#forecast").html("");
     for (let i = 3; i < data.list.length; i += 8) {
-      let dateText = data.list[0].dt_txt;
-      let temp = data.list[0].main.temp;
-      let humidity = data.list[0].main.humidity;
-      let windSpeed = data.list[0].wind.speed;
+      let dateText = data.list[i].dt_txt;
+      let temp = data.list[i].main.temp;
+      let humidity = data.list[i].main.humidity;
+      let windSpeed = data.list[i].wind.speed;
 
       let container = $("<div>");
 
       // add date
       let dateTextHeading = $("<h3>");
       dateTextHeading.text(dateText);
+      container.append(dateTextHeading);
       // add temp
       let tempParagraph = $("<p>");
       tempParagraph.text(temp);
+      container.append(tempParagraph);
       // add humidity
       let humidityParagraph = $("<p>");
       humidityParagraph.text(humidity);
+      container.append(humidityParagraph);
 
       //  add wind speed
-      let windSpeedParagraph = "<p>";
+      let windSpeedParagraph = $("<p>");
       windSpeedParagraph.text(windSpeed);
+      container.append(windSpeedParagraph);
+
+      // add container to html
+
+      $("#forecast").append(container);
     }
   }
-
-  // data.list[0].dt_text
-
-  //
 });
