@@ -16,7 +16,7 @@ $(function () {
 
   function getCoordinates(cityName) {
     let apiUrl =
-      "http://api.openweathermap.org/geo/1.0/direct?q=" +
+      "https://api.openweathermap.org/geo/1.0/direct?q=" +
       cityName +
       "&limit=1&appid=" +
       apiKey;
@@ -35,7 +35,7 @@ $(function () {
   }
 
   function getWeather(data) {
-    let weatherUrl = "http://api.openweathermap.org/data/2.5/weather?";
+    let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?";
 
     weatherUrl += "lat=" + data.lat;
 
@@ -94,7 +94,7 @@ $(function () {
   // with the latitude and longitude we'll use the weather api to get the forecast
 
   function getForecast(data) {
-    let forecastUrl = "http://api.openweathermap.org/data/2.5/forecast?";
+    let forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?";
 
     forecastUrl += "lat=" + data.lat;
 
