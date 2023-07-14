@@ -75,6 +75,7 @@ $(function () {
     let dateTextHeading = $("<h3>");
     dateTextHeading.text(date);
     container.append(dateTextHeading);
+
     // add temp
     let tempParagraph = $("<p>");
     tempParagraph.text(temp);
@@ -134,6 +135,14 @@ $(function () {
       let dateTextHeading = $("<h3>");
       dateTextHeading.text(dayjs(dateText).format("M/D/YYYY"));
       container.append(dateTextHeading);
+
+      let icon = $("<img>")
+        .addClass("rounded mx-auto d-block")
+        .attr(
+          "src",
+          `https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@4x.png`
+        );
+      container.append(icon);
       // add temp
       let tempParagraph = $("<p>");
       tempParagraph.text(temp);
