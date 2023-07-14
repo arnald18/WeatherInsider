@@ -28,8 +28,66 @@ $(function () {
         }
       })
       .then(function (data) {
+        saveCity();
+        getWeather(data[0]);
         getForecast(data[0]);
       });
+  }
+
+  function getWeather(data) {
+    let weatherUrl = "http://api.openweathermap.org/data/2.5/weather?";
+
+    weatherUrl += "lat=" + data.lat;
+
+    weatherUrl += "&";
+
+    weatherUrl += "lon=" + data.lon;
+
+    weatherUrl += "&";
+
+    weatherUrl += "units=imperial";
+    weatherUrl += "&";
+
+    weatherUrl += "appid=" + apiKey;
+
+    fetch(weatherUrl)
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then(function (data) {
+        displayWeather(data);
+      });
+  }
+
+  function displayWeather(data) {
+    let temp = data.main.temp;
+    let humidity = data.main.humidity;
+    let windSpeed = data.wind.speed;
+
+    let date = dayjs().format("M/D/YYYY");
+
+    let container = $("#current-weather");
+    container.html("");
+
+    // add date
+    let dateTextHeading = $("<h3>");
+    dateTextHeading.text(date);
+    container.append(dateTextHeading);
+    // add temp
+    let tempParagraph = $("<p>");
+    tempParagraph.text(temp);
+    container.append(tempParagraph);
+    // add humidity
+    let humidityParagraph = $("<p>");
+    humidityParagraph.text(humidity);
+    container.append(humidityParagraph);
+
+    //  add wind speed
+    let windSpeedParagraph = $("<p>");
+    windSpeedParagraph.text(windSpeed);
+    container.append(windSpeedParagraph);
   }
 
   // with the latitude and longitude we'll use the weather api to get the forecast
@@ -44,19 +102,18 @@ $(function () {
     forecastUrl += "lon=" + data.lon;
 
     forecastUrl += "&";
+    forecastUrl += "units=imperial";
+    forecastUrl += "&";
 
     forecastUrl += "appid=" + apiKey;
 
     fetch(forecastUrl)
       .then(function (response) {
-        console.log(response);
-
         if (response.ok) {
           return response.json();
         }
       })
       .then(function (data) {
-        console.log(data);
         displayForecast(data);
       });
   }
@@ -64,7 +121,7 @@ $(function () {
   // display the forecast on the screen and add the city to the cities list
 
   function displayForecast(data) {
-    $("#forecast").html("");
+    $("#forecast-5").html("");
     for (let i = 3; i < data.list.length; i += 8) {
       let dateText = data.list[i].dt_txt;
       let temp = data.list[i].main.temp;
@@ -75,7 +132,7 @@ $(function () {
 
       // add date
       let dateTextHeading = $("<h3>");
-      dateTextHeading.text(dateText);
+      dateTextHeading.text(dayjs(dateText).format("M/D/YYYY"));
       container.append(dateTextHeading);
       // add temp
       let tempParagraph = $("<p>");
@@ -93,7 +150,42 @@ $(function () {
 
       // add container to html
 
-      $("#forecast").append(container);
+      $("#forecast-5").append(container);
+    }
+  }
+  function saveCity() {
+    let cities = JSON.parse(localStorage.getItem("cities"));
+    if (cities === null) {
+      cities = [];
+    }
+
+    let city = $("#search").val();
+
+    if (!cities.includes(city)) {
+      cities.unshift(city);
+    }
+
+    localStorage.setItem("cities", JSON.stringify(cities));
+
+    displayCities();
+  }
+
+  function displayCities() {
+    let citiesList = $("#cities-list");
+
+    citiesList.html("");
+
+    let cities = JSON.parse(localStorage.getItem("cities"));
+
+    for (let i = 0; i < cities.length; i++) {
+      let cityButton = $("<button>");
+      cityButton.text(cities[i]);
+
+      cityButton.on("click", function () {
+        getCoordinates(cities[i]);
+      });
+
+      citiesList.append(cityButton);
     }
   }
 });
